@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrganizApp | Tu agenda escolar inteligente</title>
+  <meta name="description" content="OrganizApp es la aplicación ideal para estudiantes de secundaria. Organiza tus materias, tareas pendientes y próximas evaluaciones sin complicaciones.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- AUTH SCREEN (Shown when no user is logged in) -->
+  <div id="auth-screen" class="auth-backdrop">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-brand-logo">✨</div>
+        <h2>Organiz<span>App</span></h2>
+        <p>Tu agenda escolar inteligente y segura</p>
+      </div>
+
+      <!-- Auth Switch Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="auth-tab-login">Iniciar Sesión</button>
+        <button class="auth-tab" id="auth-tab-register">Crear Cuenta</button>
+      </div>
+
+      <!-- Moderation Alert Banner -->
+      <div id="auth-moderation-warning" class="moderation-warning hidden">
+        <span class="warning-icon">⚠️</span>
+        <span id="auth-warning-text">Tu nombre de usuario contiene palabras no apropiadas para un entorno escolar.</span>
+      </div>
+
+      <!-- FORM: INICIAR SESIÓN -->
+      <form id="form-login" class="auth-form active">
+        <div class="form-group">
+          <label for="login-username">Usuario o Email <span class="required">*</span></label>
+          <input type="text" id="login-username" class="form-control" placeholder="Ej: estudiante@colegio.edu" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña <span class="required">*</span></label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Entrar a OrganizApp</button>
+
+        <div class="demo-login-box">
+          <p>¿Quieres probar rápido? Usa la cuenta de demostración:</p>
+          <button type="button" class="btn btn-secondary btn-block" id="btn-quick-demo-login">
+            🚀 Entrar como Estudiante Demo
+          </button>
+        </div>
+      </form>
+
+      <!-- FORM: CREAR CUENTA -->
+      <form id="form-register" class="auth-form">
+        <div class="form-group">
+          <label for="reg-name">Nombre Completo o Apodo <span class="required">*</span></label>
+          <input type="text" id="reg-name" class="form-control" placeholder="Ej: Sofía Martínez" required>
+          <span class="field-hint">Usaremos este nombre en tu perfil. Debe ser respetuoso.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-username">Usuario / Email Escolar <span class="required">*</span></label>
+          <input type="text" id="reg-username" class="form-control" placeholder="Ej: sofia_martinez" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="reg-year">Año / Grado <span class="required">*</span></label>
+            <select id="reg-year" class="form-control" required>
+              <option value="1° Año Secundaria">1° Año Secundaria</option>
+              <option value="2° Año Secundaria">2° Año Secundaria</option>
+              <option value="3° Año Secundaria">3° Año Secundaria</option>
+              <option value="4° Año Secundaria" selected>4° Año Secundaria</option>
+              <option value="5° Año Secundaria">5° Año Secundaria</option>
+              <option value="6° Año Secundaria">6° Año Secundaria</option>
+            </select>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="reg-password">Contraseña <span class="required">*</span></label>
+            <input type="password" id="reg-password" class="form-control" placeholder="Mínimo 4 caracteres" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Elige tu Avatar o Foto de Perfil <span class="required">*</span></label>
+          <div class="avatar-selector" id="reg-avatar-selector">
+            <span class="avatar-opt active" data-avatar="🎒">🎒</span>
+            <span class="avatar-opt" data-avatar="🎓">🎓</span>
+            <span class="avatar-opt" data-avatar="🎨">🎨</span>
+            <span class="avatar-opt" data-avatar="⚽">⚽</span>
+            <span class="avatar-opt" data-avatar="🎧">🎧</span>
+            <span class="avatar-opt" data-avatar="🚀">🚀</span>
+            <span class="avatar-opt" data-avatar="🦊">🦊</span>
+            <span class="avatar-opt" data-avatar="🐼">🐼</span>
+            <span class="avatar-opt" data-avatar="🦁">🦁</span>
+            <span class="avatar-opt" data-avatar="💻">💻</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear mi Cuenta Escolar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP WRAPPER -->
+  <div id="app" class="app-layout">
+    <!-- Sidebar / App Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <span class="logo-icon">✨</span>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">Organiz<span>App</span></h1>
+          <span class="brand-tagline">Agenda Secundaria</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="inicio" id="nav-inicio">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Inicio</span>
+        </button>
+        <button class="nav-item" data-tab="materias" id="nav-materias">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          <span>Materias</span>
+          <span class="badge" id="badge-materias-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="tareas" id="nav-tareas">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Tareas</span>
+          <span class="badge badge-urgent" id="badge-tareas-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="evaluaciones" id="nav-evaluaciones">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Evaluaciones</span>
+          <span class="badge" id="badge-evaluaciones-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="terminadas" id="nav-terminadas">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Tareas Terminadas</span>
+          <span class="badge badge-done" id="badge-terminadas-count">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-quick-action">
+        <button class="btn btn-primary btn-block btn-lg" id="btn-quick-add-sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>+ Agregar Nueva</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-greeting" id="user-profile-trigger" style="cursor: pointer;" title="Ver y editar perfil">
+          <div class="avatar" id="sidebar-user-avatar">🎒</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-user-name">Estudiante</span>
+            <span class="user-status" id="sidebar-user-grade">4° Año Secundaria</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="btn-text-sm" id="btn-edit-profile-sidebar" style="color: var(--primary);">
+            ✏️ Editar Perfil
+          </button>
+          <button class="btn-text-sm" id="btn-logout" style="color: var(--accent-pink); margin-left: auto;">
+            🚪 Cerrar Sesión
+          </button>
+        </div>
+
+        <button class="btn-text-sm" id="btn-reset-demo" title="Restablecer datos de prueba" style="margin-top: 6px;">
+          🔄 Restablecer datos demo
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header / Bar -->
+      <header class="top-header">
+        <div class="mobile-nav-toggle" id="mobile-toggle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </div>
+        
+        <div class="header-title-container">
+          <h2 class="page-title" id="page-title">Bienvenido a OrganizApp</h2>
+          <p class="page-subtitle" id="page-subtitle">Revisa tus pendientes y mantén al día tus materias</p>
+        </div>
+
+        <div class="header-actions">
+          <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="global-search" placeholder="Buscar tarea, examen o materia..." autocomplete="off">
+          </div>
+
+          <button class="btn btn-primary btn-add-main" id="btn-open-add-modal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Agregar</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Views Container -->
+      <div class="content-body">
+
+        <!-- VIEW 1: INICIO (DASHBOARD) -->
+        <section id="view-inicio" class="view-panel active">
+          <!-- Hero Motivational Banner -->
+          <div class="dashboard-hero">
+            <div class="hero-content">
+              <span class="hero-chip">🚀 ¡Tu espacio de estudio!</span>
+              <h2 id="hero-greeting">¡Hola, Alex! 📚</h2>
+              <p id="hero-status-text">Tienes <strong id="hero-urgent-count">0</strong> tareas pendientes para estos días. Organízate y descansa tranquilo.</p>
+              <div class="hero-buttons">
+                <button class="btn btn-light" id="btn-hero-add-task">
+                  + Nueva Tarea
+                </button>
+                <button class="btn btn-glass" id="btn-hero-add-exam">
+                  + Nueva Evaluación
+                </button>
+              </div>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-card">
+                <span class="stat-icon">🔥</span>
+                <div class="stat-info">
+                  <span class="stat-value" id="stat-pending">0</span>
+                  <span class="stat-label">Pendientes</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">⭐</span>
+                <div class="stat-info">
+                  <span class="stat-value" id="stat-completed">0</span>
+                  <span class="stat-label">Completadas</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">📝</span>
+                <div class="stat-info">
+                  <span class="stat-value" id="stat-exams">0</span>
+                  <span class="stat-label">Evaluaciones</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Tareas Pendientes (Main focus) -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="section-icon">📌</span>
+                <h3>Tareas Pendientes</h3>
+                <span class="section-badge" id="pending-tasks-count">0</span>
+              </div>
+              <button class="link-btn" id="btn-see-all-tasks">Ver todas las tareas &rarr;</button>
+            </div>
+
+            <div id="dashboard-tasks-container" class="tasks-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Grid: Mis Materias + Próximas Evaluaciones -->
+          <div class="dashboard-columns">
+            <!-- Mis Materias Section -->
+            <div class="dashboard-section col-left">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="section-icon">📚</span>
+                  <h3>Mis Materias</h3>
+                  <span class="section-badge" id="subjects-count">0</span>
+                </div>
+                <button class="link-btn" id="btn-add-subject-dash">+ Nueva Materia</button>
+              </div>
+
+              <div id="dashboard-subjects-container" class="subjects-grid">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Próximas Evaluaciones Section -->
+            <div class="dashboard-section col-right">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="section-icon">🎯</span>
+                  <h3>Próximas Evaluaciones</h3>
+                  <span class="section-badge" id="upcoming-exams-count">0</span>
+                </div>
+                <button class="link-btn" id="btn-see-all-exams">Ver calendario &rarr;</button>
+              </div>
+
+              <div id="dashboard-exams-container" class="exams-list">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Tareas Terminadas preview -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="section-icon">✅</span>
+                <h3>Últimas Tareas Completadas</h3>
+                <span class="section-badge badge-green" id="done-tasks-count">0</span>
+              </div>
+              <button class="link-btn" id="btn-see-all-completed">Ir a Tareas Terminadas &rarr;</button>
+            </div>
+
+            <div id="dashboard-completed-container" class="completed-preview-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: MATERIAS -->
+        <section id="view-materias" class="view-panel">
+          <div class="view-toolbar">
+            <div class="toolbar-info">
+              <h3>Todas tus Materias</h3>
+              <p>Selecciona una materia para ver sus tareas y evaluaciones correspondientes.</p>
+            </div>
+            <button class="btn btn-primary" id="btn-create-subject">
+              + Nueva Materia
+            </button>
+          </div>
+
+          <div id="full-subjects-grid" class="subjects-grid-large">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Detail view when a subject is clicked -->
+          <div id="subject-detail-modal" class="detail-container hidden">
+            <!-- Rendered dynamically when viewing single subject -->
+          </div>
+        </section>
+
+        <!-- VIEW 3: TAREAS -->
+        <section id="view-tareas" class="view-panel">
+          <div class="view-toolbar">
+            <div class="toolbar-info">
+              <h3>Gestión de Tareas</h3>
+              <p>Organizadas por fecha de entrega. ¡Marca las que vayas terminando!</p>
+            </div>
+            <div class="toolbar-actions">
+              <button class="btn btn-primary" id="btn-create-task-page">
+                + Crear Tarea
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Toolbar -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>Materia:</label>
+              <select id="filter-task-subject" class="select-input">
+                <option value="ALL">Todas las materias</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Prioridad:</label>
+              <select id="filter-task-priority" class="select-input">
+                <option value="ALL">Todas las prioridades</option>
+                <option value="alta">🔴 Alta</option>
+                <option value="media">🟠 Media</option>
+                <option value="baja">🟢 Baja</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Estado:</label>
+              <select id="filter-task-status" class="select-input">
+                <option value="pending">Pendientes</option>
+                <option value="completed">Terminadas</option>
+                <option value="ALL">Todas</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="full-tasks-list" class="tasks-grid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- VIEW 4: EVALUACIONES -->
+        <section id="view-evaluaciones" class="view-panel">
+          <div class="view-toolbar">
+            <div class="toolbar-info">
+              <h3>Próximos Exámenes y Evaluaciones</h3>
+              <p>Mantén bajo control tus fechas de estudio para no dejar nada a último momento.</p>
+            </div>
+            <button class="btn btn-primary" id="btn-create-exam-page">
+              + Nueva Evaluación
+            </button>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>Filtrar por Materia:</label>
+              <select id="filter-exam-subject" class="select-input">
+                <option value="ALL">Todas las materias</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="full-exams-list" class="exams-full-grid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- VIEW 5: TAREAS TERMINADAS -->
+        <section id="view-terminadas" class="view-panel">
+          <div class="view-toolbar">
+            <div class="toolbar-info">
+              <h3>Historial de Tareas Terminadas 🏆</h3>
+              <p>¡Gran trabajo! Aquí puedes ver todo lo que has logrado hasta ahora.</p>
+            </div>
+          </div>
+
+          <div id="full-completed-list" class="tasks-grid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: AGREGAR ELEMENTO (TAREA / EVALUACIÓN / MATERIA) -->
+  <div class="modal-backdrop" id="modal-add" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">✨ Agregar a OrganizApp</h3>
+        <button class="modal-close" id="btn-close-modal" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <!-- Type Switcher Tabs -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-type="task" id="tab-add-task">📌 Tarea</button>
+        <button class="modal-tab" data-type="exam" id="tab-add-exam">🎯 Evaluación</button>
+        <button class="modal-tab" data-type="subject" id="tab-add-subject">📚 Materia</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- FORM 1: TAREA -->
+        <form id="form-add-task" class="modal-form active">
+          <div class="form-group">
+            <label for="task-materia">Materia <span class="required">*</span></label>
+            <select id="task-materia" class="form-control" required>
+              <!-- Filled dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="task-title">Nombre de la Tarea <span class="required">*</span></label>
+            <input type="text" id="task-title" class="form-control" placeholder="Ej: Resolver ejercicios 58 y 59" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="task-date">Fecha de Entrega <span class="required">*</span></label>
+              <input type="date" id="task-date" class="form-control" required>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="task-priority">Prioridad <span class="required">*</span></label>
+              <select id="task-priority" class="form-control" required>
+                <option value="alta">🔴 Alta (Urgente)</option>
+                <option value="media" selected>🟠 Media (Normal)</option>
+                <option value="baja">🟢 Baja (Con tiempo)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="task-desc">Descripción / Detalles (opcional)</label>
+            <textarea id="task-desc" class="form-control" rows="3" placeholder="Ej: Páginas 45 a 48 del libro. Traer impreso el gráfico."></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-primary btn-lg">Guardar Tarea</button>
+          </div>
+        </form>
+
+        <!-- FORM 2: EVALUACIÓN -->
+        <form id="form-add-exam" class="modal-form">
+          <div class="form-group">
+            <label for="exam-materia">Materia <span class="required">*</span></label>
+            <select id="exam-materia" class="form-control" required>
+              <!-- Filled dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="exam-title">Nombre del Examen / Evaluación <span class="required">*</span></label>
+            <input type="text" id="exam-title" class="form-control" placeholder="Ej: Parcial de Revolución de Mayo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="exam-date">Fecha de Examen <span class="required">*</span></label>
+            <input type="date" id="exam-date" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="exam-desc">Temas a Estudiar / Notas (opcional)</label>
+            <textarea id="exam-desc" class="form-control" rows="3" placeholder="Ej: Capítulos 2 y 3. Entra mapa temático y preguntas de opción múltiple."></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-primary btn-lg">Guardar Evaluación</button>
+          </div>
+        </form>
+
+        <!-- FORM 3: MATERIA -->
+        <form id="form-add-subject" class="modal-form">
+          <div class="form-group">
+            <label for="subject-title">Nombre de la Materia <span class="required">*</span></label>
+            <input type="text" id="subject-title" class="form-control" placeholder="Ej: Física, Geografía, Filosofía..." required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="subject-teacher">Docente / Profesor (opcional)</label>
+              <input type="text" id="subject-teacher" class="form-control" placeholder="Ej: Prof. Martínez">
+            </div>
+
+            <div class="form-group col-6">
+              <label for="subject-room">Aula / Horario (opcional)</label>
+              <input type="text" id="subject-room" class="form-control" placeholder="Ej: Aula 4 - Mar y Jue">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Icono / Emoji <span class="required">*</span></label>
+            <div class="emoji-selector" id="subject-emoji-selector">
+              <span class="emoji-option active" data-emoji="📐">📐</span>
+              <span class="emoji-option" data-emoji="📚">📚</span>
+              <span class="emoji-option" data-emoji="🔬">🔬</span>
+              <span class="emoji-option" data-emoji="🌍">🌍</span>
+              <span class="emoji-option" data-emoji="🎨">🎨</span>
+              <span class="emoji-option" data-emoji="💻">💻</span>
+              <span class="emoji-option" data-emoji="🇬🇧">🇬🇧</span>
+              <span class="emoji-option" data-emoji="⚽">⚽</span>
+              <span class="emoji-option" data-emoji="🎵">🎵</span>
+              <span class="emoji-option" data-emoji="🧪">🧪</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Color de la Materia <span class="required">*</span></label>
+            <div class="color-selector" id="subject-color-selector">
+              <button type="button" class="color-option active" data-color="#6366f1" style="background: #6366f1;"></button>
+              <button type="button" class="color-option" data-color="#ec4899" style="background: #ec4899;"></button>
+              <button type="button" class="color-option" data-color="#10b981" style="background: #10b981;"></button>
+              <button type="button" class="color-option" data-color="#f59e0b" style="background: #f59e0b;"></button>
+              <button type="button" class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></button>
+              <button type="button" class="color-option" data-color="#06b6d4" style="background: #06b6d4;"></button>
+              <button type="button" class="color-option" data-color="#ef4444" style="background: #ef4444;"></button>
+              <button type="button" class="color-option" data-color="#14b8a6" style="background: #14b8a6;"></button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-primary btn-lg">Crear Materia</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR PERFIL -->
+  <div class="modal-backdrop" id="modal-edit-profile" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>✏️ Personalizar Perfil Escolar</h3>
+        <button class="modal-close" id="btn-close-profile-modal" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="profile-moderation-warning" class="moderation-warning hidden">
+          <span class="warning-icon">⚠️</span>
+          <span id="profile-warning-text">El nombre contiene términos no apropiados para la escuela.</span>
+        </div>
+
+        <form id="form-edit-profile" class="modal-form active">
+          <div class="form-group">
+            <label for="edit-profile-name">Nombre o Apodo <span class="required">*</span></label>
+            <input type="text" id="edit-profile-name" class="form-control" required placeholder="Tu nombre escolar">
+            <span class="field-hint">Los nombres son moderados automáticamente para mantener un ambiente de respeto.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-profile-grade">Año / Grado <span class="required">*</span></label>
+            <select id="edit-profile-grade" class="form-control" required>
+              <option value="1° Año Secundaria">1° Año Secundaria</option>
+              <option value="2° Año Secundaria">2° Año Secundaria</option>
+              <option value="3° Año Secundaria">3° Año Secundaria</option>
+              <option value="4° Año Secundaria">4° Año Secundaria</option>
+              <option value="5° Año Secundaria">5° Año Secundaria</option>
+              <option value="6° Año Secundaria">6° Año Secundaria</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Avatar / Foto de Perfil Escolar</label>
+            <div class="avatar-selector" id="edit-avatar-selector">
+              <span class="avatar-opt" data-avatar="🎒">🎒</span>
+              <span class="avatar-opt" data-avatar="🎓">🎓</span>
+              <span class="avatar-opt" data-avatar="🎨">🎨</span>
+              <span class="avatar-opt" data-avatar="⚽">⚽</span>
+              <span class="avatar-opt" data-avatar="🎧">🎧</span>
+              <span class="avatar-opt" data-avatar="🚀">🚀</span>
+              <span class="avatar-opt" data-avatar="🦊">🦊</span>
+              <span class="avatar-opt" data-avatar="🐼">🐼</span>
+              <span class="avatar-opt" data-avatar="🦁">🦁</span>
+              <span class="avatar-opt" data-avatar="💻">💻</span>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary modal-cancel-profile">Cancelar</button>
+            <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION SYSTEM -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
