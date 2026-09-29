@@ -339,7 +339,9 @@ function setupEventListeners() {
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       const targetTab = item.getAttribute('data-tab');
-      switchTab(targetTab);
+      if (targetTab) {
+        switchTab(targetTab);
+      }
     });
   });
 
@@ -368,6 +370,21 @@ function setupEventListeners() {
 
   // Reset Demo Data
   document.getElementById('btn-reset-demo').addEventListener('click', resetToDemoData);
+
+  // Install / Download App buttons & modal
+  const installHeaderBtn = document.getElementById('btn-install-app-header');
+  const installNavBtn = document.getElementById('btn-install-app-nav');
+  if (installHeaderBtn) installHeaderBtn.addEventListener('click', openInstallModal);
+  if (installNavBtn) installNavBtn.addEventListener('click', openInstallModal);
+
+  const closeInstallBtn = document.getElementById('btn-close-install-modal');
+  if (closeInstallBtn) closeInstallBtn.addEventListener('click', closeInstallModal);
+
+  const triggerInstallBtn = document.getElementById('btn-trigger-pwa-install');
+  if (triggerInstallBtn) triggerInstallBtn.addEventListener('click', handlePwaInstall);
+
+  const downloadPackBtn = document.getElementById('btn-download-offline-pack');
+  if (downloadPackBtn) downloadPackBtn.addEventListener('click', downloadOfflinePackage);
 
   // Auth Tabs (Login vs Register)
   document.getElementById('auth-tab-login').addEventListener('click', () => switchAuthTab('login'));
@@ -1341,3 +1358,69 @@ function escapeHTML(str) {
     }[tag] || tag)
   );
 }
+
+// ==========================================================================
+// PWA SERVICE WORKER & DOWNLOAD / INSTALL MANAGEMENT
+// ==========================================================================
+let deferredPwaPrompt = null;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('[OrganizApp] ServiceWorker registrado con éxito:', reg.scope))
+      .catch(err => console.error('[OrganizApp] Error registrando ServiceWorker:', err));
+  });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  console.log('[OrganizApp] PWA install prompt disponible');
+});
+
+function openInstallModal() {
+  const modal = document.getElementById('modal-install-app');
+  if (!modal) return;
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeInstallModal() {
+  const modal = document.getElementById('modal-install-app');
+  if (!modal) return;
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+function handlePwaInstall() {
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    deferredPwaPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        showToast('🎉 ¡OrganizApp se instaló correctamente en tu dispositivo!');
+      } else {
+        showToast('Instalación cancelada.');
+      }
+      deferredPwaPrompt = null;
+      closeInstallModal();
+    });
+  } else {
+    showToast('Sigue las instrucciones en pantalla para instalar según tu navegador 📱');
+  }
+}
+
+function downloadOfflinePackage() {
+  // Generate downloadable single HTML package with all styles and content embedded
+  const htmlContent = document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'OrganizApp_Offline.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('💾 Se descargó la versión offline de OrganizApp.');
+}
+

@@ -1535,3 +1535,153 @@ button {
     width: 160px;
   }
 }
+
+/* ==========================================================================
+   PWA INSTALLATION & DOWNLOAD UI
+   ========================================================================== */
+.btn-install-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  transition: all var(--transition-fast);
+}
+
+.btn-install-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+}
+
+.install-pwa-btn {
+  background-color: #f1f5f9;
+  color: var(--primary);
+  font-weight: 700;
+  border: 1px dashed var(--border-focus);
+  transition: all var(--transition-fast);
+}
+
+.install-pwa-btn:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.modal-install-card {
+  max-width: 620px;
+  border-radius: var(--radius-lg);
+}
+
+.install-app-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #eef2ff 0%, #f3e8ff 100%);
+  padding: 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  border: 1px solid var(--border-focus);
+}
+
+.install-app-icon {
+  font-size: 32px;
+  width: 54px;
+  height: 54px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.install-app-info h4 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.install-app-info p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.install-direct-action {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.install-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.install-instructions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.instruction-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.instruction-card .card-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.instruction-card h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.instruction-steps {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-left: 16px;
+  line-height: 1.4;
+}
+
+.instruction-steps li {
+  margin-bottom: 6px;
+}
+
+.modal-divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 18px 0;
+}
+
+.install-backup-section {
+  text-align: center;
+}
+
+.install-backup-section h5 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.install-backup-section p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+

@@ -11,6 +11,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- PWA & Mobile Capabilities -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="OrganizApp">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -150,6 +159,10 @@
           <span>Tareas Terminadas</span>
           <span class="badge badge-done" id="badge-terminadas-count">0</span>
         </button>
+        <button class="nav-item install-pwa-btn" id="btn-install-app-nav" style="margin-top: 12px;">
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Descargar App 📲</span>
+        </button>
       </nav>
 
       <div class="sidebar-quick-action">
@@ -201,6 +214,11 @@
             <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="text" id="global-search" placeholder="Buscar tarea, examen o materia..." autocomplete="off">
           </div>
+
+          <button class="btn btn-install-header" id="btn-install-app-header" title="Descargar o Instalar OrganizApp en tu celular/PC">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Descargar App 📲</span>
+          </button>
 
           <button class="btn btn-primary btn-add-main" id="btn-open-add-modal">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -634,6 +652,69 @@
             <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DESCARGAR / INSTALAR APP -->
+  <div class="modal-backdrop" id="modal-install-app" aria-hidden="true">
+    <div class="modal-card modal-install-card">
+      <div class="modal-header">
+        <h3>📲 Descargar e Instalar OrganizApp</h3>
+        <button class="modal-close" id="btn-close-install-modal" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="install-app-hero">
+          <div class="install-app-icon">✨</div>
+          <div class="install-app-info">
+            <h4>OrganizApp en tu Celular o Computadora</h4>
+            <p>Accede en 1 clic desde tu pantalla de inicio, funciona sin internet y mantiene todo guardado en tu dispositivo.</p>
+          </div>
+        </div>
+
+        <div class="install-direct-action" id="install-pwa-prompt-container">
+          <button class="btn btn-primary btn-block btn-lg" id="btn-trigger-pwa-install">
+            ⚡ Instalar Directamente en tu Dispositivo
+          </button>
+          <p class="install-note">Toca para añadir OrganizApp a tu pantalla de inicio sin usar tiendas de apps.</p>
+        </div>
+
+        <div class="install-instructions-grid">
+          <div class="instruction-card">
+            <div class="card-icon">📱</div>
+            <h5>Android (Google Chrome)</h5>
+            <ol class="instruction-steps">
+              <li>Toca el menú (<strong>⋮</strong> arriba a la derecha).</li>
+              <li>Selecciona <strong>"Instalar aplicación"</strong> o <strong>"Añadir a pantalla de inicio"</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="instruction-card">
+            <div class="card-icon">🍎</div>
+            <h5>iPhone / iPad (Safari)</h5>
+            <ol class="instruction-steps">
+              <li>Toca el botón <strong>Compartir</strong> (icono 📤 al pie de Safari).</li>
+              <li>Elige <strong>"Agregar a inicio"</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="instruction-card">
+            <div class="card-icon">💻</div>
+            <h5>Computadora (Windows / Mac)</h5>
+            <ol class="instruction-steps">
+              <li>Haz clic en el icono <strong>📲 Instalar</strong> en la barra de direcciones de Chrome / Edge.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="install-backup-section">
+          <hr class="modal-divider">
+          <h5>📦 ¿Quieres descargar la aplicación offline o hacer una copia de seguridad?</h5>
+          <p>Descarga un archivo liviano con todo el código de OrganizApp listo para ejecutar sin conexión.</p>
+          <button class="btn btn-secondary btn-block" id="btn-download-offline-pack">
+            ⬇️ Descargar Copia Offline (.html completa)
+          </button>
+        </div>
       </div>
     </div>
   </div>
